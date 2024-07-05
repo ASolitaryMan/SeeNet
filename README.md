@@ -4,7 +4,7 @@
 > School of Aritificial Intelligence, Beijing University of Posts and Telecommunications & Tianjin Normal University & GLAM – The Group on Language, Audio, and Music, Imperial College London<br>
 
 ## 📰 News
-**[2024.06.13]** We upload the codes. 
+**[2024.06.13]** After the peer review process is completed, we will update the code. 
 
 
 ## ✨ Overview
