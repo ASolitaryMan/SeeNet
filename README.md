@@ -38,20 +38,66 @@ Main prerequisites:
 
 If some are missing, please refer to [requirements.yml](requirements.ylm) for more details.
 
+## 📍 Data Preparation
+1. You should prepare training source, such as train.scp, valid.scp.
+
+    Specifically, the format of `*.scp` file is typically like this:
+
+    ```
+    wave_index1 dataset_root/audio_1 label_1
+    wave_index2 dataset_root/audio_2 label_2
+    wave_index3 dataset_root/audio_3 label_3
+    ...
+    wave_indexN dataset_root/audio_N label_N
+    ```
+
+    An example of [train.scp] is shown as follows:
+
+    ```
+    Ses03F_impro01_F002 /home/samba/public/Datasets/IEMOCAP/IEMOCAP_full_release/Session3/sentences/wav/Ses03F_impro01/Ses03F_impro01_F002.wav neu
+    Ses03F_impro01_M001 /home/samba/public/Datasets/IEMOCAP/IEMOCAP_full_release/Session3/sentences/wav/Ses03F_impro01/Ses03F_impro01_M001.wav neu
+    Ses03F_impro01_M002 /home/samba/public/Datasets/IEMOCAP/IEMOCAP_full_release/Session3/sentences/wav/Ses03F_impro01/Ses03F_impro01_M002.wav neu
+    Ses03F_impro01_M003 /home/samba/public/Datasets/IEMOCAP/IEMOCAP_full_release/Session3/sentences/wav/Ses03F_impro01/Ses03F_impro01_M003.wav neu
+    ```
 
 ## ➡️ File Description
 
 1. src/SeeNet.py. The file includes the dataset, training method, and the model of SeeNet. The file is for IEMOCAP and REVADESS.
 
-2. src/SeeNetForMSP_IMPROVE.py. The file includes the dataset, training method, and the model of SeeNet. The file is for MSP-IMPROVE.
+  ```
+    CUDA_VISIBLE_DEVICES="0,1,2,3" accelerate launch SeeNet.py --train_src="/path/session1_train.scp" --valid_src="/path/session1_valid.scp --loss_rate=0.01"
+  ```
+
+2. src/SeeNetForMSP_IMPROVE.py. The file includes the dataset, training method, and the model of SeeNet. The file is for cross-dataset validation.
+
+  ```
+    CUDA_VISIBLE_DEVICES="0,1,2,3" accelerate launch iemocap2msp.py --epochs=40 --train_src="/home/lqf/workspace/icassp2023/all_iemocap.scp" --valid_src="/home/lqf/workspace/wavlm-multi/part1_shuff_all_msp.scp" --test_src="/home/lqf/workspace/wavlm-multi/part2_shuff_all_msp.scp" --loss_rate=0.01 --is_augment
+  ```
 
 3. src/fine_tune_pretrained_model.py. The file includes the methods, which are used to fine-tune wav2vec2.0, HuBERT, WavLM and Data2vec.
+  ```
+    CUDA_VISIBLE_DEVICES="0,1,2,3" accelerate launch SeeNet.py --max_length=6 --model="wavlm" --train_src="/path/session1_train.scp" --valid_src="/path/session1_valid.scp"
+  ```
+
+* `When you fine tune the Data2vec, the lr should be set as 0.00001.`
+
 
 4. src/auxiliary_task_ablation_exp.py. The file is used to conduct comparative experiments on different auxiliary tasks.
+  ```
+    CUDA_VISIBLE_DEVICES="0,1,2,3" accelerate launch auxiliary_task_ablation_exp.py --max_length=6 --epochs=30 --loss_rate=0.01 --num_class_a=4 --num_class_c=4 --train_src="/home/lqf/workspace/icassp2023/session1_train_info.scp" --valid_src="/home/lqf/workspace/icassp2023/session1_test_info.scp" --aux_task="SEE"
+  ```
 
 5. src/data_augmentation_ablation.py. The file is used to evalutae the performance different data augmentation method.
 
+  ```
+    CUDA_VISIBLE_DEVICES="0,1,2,3" accelerate launch data_augmentation_ablation.py --train_src="/path/session1_train.scp" --valid_src="/path/session1_valid.scp --loss_rate=0 --is_augment=True --method_augment="SNR""
+  ```
+
 5. src/noise_exp.py. The file includes the methods, which are used to evaluate the noise immunity of SeeNet and its elements.
+
+  ```
+    CUDA_VISIBLE_DEVICES="0,1,2,3" accelerate launch emotion_expert_version_02_msp.py --loss_rate=0.01 --db=10  --train_src="/home/lqf/workspace/wavlm-multi/session1_train.scp" --valid_src="/home/lqf/workspace/wavlm-multi/session1_test.scp"
+  ```
 
 
 ## ☎️ Contact 
@@ -67,5 +113,13 @@ Thanks for the efforts of all the authors..
 If you think this project is helpful, please feel free to leave a star⭐️ and cite our paper:
 
 ```
-None
+@article{li2025seenet,
+  title={SeeNet: A Soft Emotion Expert and Data Augmentation Method to Enhance Speech Emotion Recognition},
+  author={Li, Qifei and Gao, Yingming and Wen, Yuhua and Zhao, Ziping and Li, Ya and Schuller, Bjorn W},
+  journal={IEEE Transactions on Affective Computing},
+  number={01},
+  pages={1--15},
+  year={2025},
+  publisher={IEEE Computer Society}
+}
 ```
