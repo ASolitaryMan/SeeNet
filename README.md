@@ -5,7 +5,7 @@
 
 ## 📰 News
 **[2024.06.13]** After the peer review process is completed, we will update the code. 
-
+**[2026.07.06]** Update the model checkpoint corresponding to Table 2. <https://pan.baidu.com/s/1iwE7kTWwdDB0QO6BL40Bqg>. password: 8ark
 
 ## ✨ Overview
 
